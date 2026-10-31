@@ -1,36 +1,63 @@
-# Database Management Tool
-This project is a web-based application for managing databases, tables, and providing an API to operate on data within those tables. It enables users to easily create, edit, and delete databases and tables, with an intuitive UI for handling columns and constraints. The tool also supports CRUD operations via a REST API for interacting with data in the created tables.
+# db-system
+
+Web application for creating and managing databases and tables. Each table gets a REST API for CRUD operations, secured with its own access token.
 
 ## Features
-### User Features:
-- **User Authentication:** Register and log in with JWT-based authentication.
-- **Database Management:** Create, edit, and delete multiple databases.
-- **Table Management**: For each database, users can:
-  - Create, edit, and delete tables.
-  - Add, edit, and delete columns (with constraint support).
-  - Modify column types and other table constraints.
-- **API for CRUD Operations:** After database and table creation, users can perform basic CRUD (Create, Read, Update, Delete) operations on the data in the tables via an API.
-- **Future Features (Planned):**
-  - Custom query support for tables.
-  - Extended constraint and column type options.
 
-## Tech Stack
+- Registration and login with JWT authentication
+- Create, edit and delete databases
+- Create, edit and delete tables, columns and constraints
+- Change column types and constraints
+- Database access tokens with a configurable lifetime, separate from UI login tokens
+- REST API for creating, reading, updating and deleting rows in any created table
 
-### Backend:
-- **Java 21 & Spring Boot 3:** The backend is built using Spring Boot, which handles all business logic, database operations, and API endpoints.
-- **InterSystems IRIS:** Primary database used for storing and managing the databases and tables created by users.
-- **Redis:** Used for caching to improve performance.
-- **JWT Authentication:** Secure access to both the UI and API endpoints, with separate tokens for UI access and API access.
-- 
-### Frontend:
-- **Angular 17:** For building the user interface and managing dynamic forms for interacting with databases and tables.
+Planned: custom queries, more column types and constraint options.
 
-## Installation
+## Tech stack
 
-1. Open source folder
-2. Run command:`docker-compose up`
-3. Everything done
+| Layer | Technology |
+| --- | --- |
+| Backend | Java 21, Spring Boot 3, Spring Security, JPA |
+| Frontend | Angular 17, Bootstrap 5 |
+| Database | InterSystems IRIS |
+| Cache | Redis |
+| Auth | JWT (UI tokens and database access tokens) |
+| Deployment | Docker Compose |
 
-Server address - `http://localhost:8080`
+## Project structure
 
-Client address - `http://localhost:4200/`
+```
+server/   Spring Boot API
+client/   Angular application
+docker-compose.yml
+```
+
+## Running
+
+Requires Docker.
+
+```
+docker-compose up --build
+```
+
+| Service | Address |
+| --- | --- |
+| Client | http://localhost:4200 |
+| Server | http://localhost:8080 |
+| IRIS management portal | http://localhost:9092 |
+
+## Data API
+
+After creating a database and a table, create an access token for the database in the UI. Send it as a bearer token to the data endpoints:
+
+| Method | Endpoint | Action |
+| --- | --- | --- |
+| GET | `/queries/{table}/getAll` | List all rows |
+| GET | `/queries/{table}/getByColumn` | Find rows matching a condition |
+| POST | `/queries/{table}/save` | Insert a row |
+| PUT | `/queries/{table}/update` | Update rows matching a condition |
+| DELETE | `/queries/{table}/delete` | Delete rows matching a condition |
+
+## License
+
+MIT
